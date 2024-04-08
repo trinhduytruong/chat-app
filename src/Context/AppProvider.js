@@ -6,6 +6,7 @@ import useFirestore from "../hooks/useFirestore";
 export const AppContext = createContext();
 export default function AppProvider({ children }) {
   const [isAddRoomVisible, setIsAddRoomVisible] = useState(false);
+  const [isInviteMemberVisible, setIsInviteMemberVisible] = useState(false);
   const [selectedRoomId, setselectedRoomId] = useState("");
 
   const {
@@ -31,12 +32,12 @@ export default function AppProvider({ children }) {
     return {
       fieldName: "uid",
       operator: "in",
-        compareValue: selectedRoom.members,
+      compareValue: selectedRoom.members,
     };
   }, [selectedRoom.members]);
 
   const members = useFirestore("users", usersCondition);
-//   console.log({members});
+  //   console.log({members});
 
   return (
     <AppContext.Provider
@@ -48,6 +49,8 @@ export default function AppProvider({ children }) {
         setIsAddRoomVisible,
         selectedRoomId,
         setselectedRoomId,
+        isInviteMemberVisible,
+        setIsInviteMemberVisible,
       }}
     >
       {children}

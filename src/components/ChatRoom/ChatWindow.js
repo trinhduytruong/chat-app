@@ -1,5 +1,5 @@
 import { UserAddOutlined } from "@ant-design/icons";
-import { Avatar, Button, Form, Tooltip, Input } from "antd";
+import { Avatar, Button, Form, Tooltip, Input, Alert } from "antd";
 import React, { useContext, useMemo } from "react";
 import styled from "styled-components";
 import Message from "./Message";
@@ -67,76 +67,95 @@ const MessageListStyled = styled.div`
   overflow-y: auto;
 `;
 
+//
+
 export default function ChatWindow() {
-  const { selectedRoom, members } = useContext(AppContext);
+  const { selectedRoom, members, setIsInviteMemberVisible } =
+    useContext(AppContext);
 
   return (
     <WrapperStyled>
-      <HeaderStyled>
-        <div className="header__info">
-          <p className="header__title">{selectedRoom?.name}</p>
-          <span className="header__description">
-            {selectedRoom?.description}
-          </span>
-        </div>
-        <div>
-          <ButtonGroupStyled>
-            <Button icon={<UserAddOutlined />} type="text">
-              Mời
-            </Button>
-            <Avatar.Group size="small" maxCount={2}>
-              {members.map((member) => (
-                <Tooltip key={member?.id} title={member?.displayName}>
-                  <Avatar src={member?.photoURL}>
-                    {member.photoURL
-                      ? ""
-                      : member.displayName?.charAt(0)?.toUpperCase()}
-                  </Avatar>
-                </Tooltip>
-              ))}
-            </Avatar.Group>
-          </ButtonGroupStyled>
-        </div>
-      </HeaderStyled>
+      {selectedRoom.id ? (
+        <>
+          <HeaderStyled>
+            <div className="header__info">
+              <p className="header__title">{selectedRoom?.name}</p>
+              <span className="header__description">
+                {selectedRoom?.description}
+              </span>
+            </div>
+            <div>
+              <ButtonGroupStyled>
+                <Button
+                  onClick={() => setIsInviteMemberVisible(true)}
+                  icon={<UserAddOutlined />}
+                  type="text"
+                >
+                  Mời
+                </Button>
+                <Avatar.Group size="small" maxCount={2}>
+                  {members.map((member) => (
+                    <Tooltip key={member?.id} title={member?.displayName}>
+                      <Avatar src={member?.photoURL}>
+                        {member.photoURL
+                          ? ""
+                          : member.displayName?.charAt(0)?.toUpperCase()}
+                      </Avatar>
+                    </Tooltip>
+                  ))}
+                </Avatar.Group>
+              </ButtonGroupStyled>
+            </div>
+          </HeaderStyled>
 
-      <ContentSyled>
-        <MessageListStyled>
-          <Message
-            text="test"
-            displayName="Truong"
-            photoURL={null}
-            createAt={121212}
-          />
-          <Message
-            text="test1"
-            displayName="Truong1"
-            photoURL={null}
-            createAt={121212}
-          />
-          <Message
-            text="test2"
-            displayName="Truong2"
-            photoURL={null}
-            createAt={121212}
-          />
-          <Message
-            text="test3"
-            displayName="Truong3"
-            photoURL={null}
-            createAt={121212}
-          />
-        </MessageListStyled>
-        <FormStyled>
-          <Form.Item>
-            <Input
-              placeholder="Nhập tin nhắn ..."
-              bordered={false}
-              autoComplete="off"
-            />
-          </Form.Item>
-          <Button type="primary">Gửi</Button>
-        </FormStyled>
-      </ContentSyled>
+          <ContentSyled>
+            <MessageListStyled>
+              <Message
+                text="test"
+                displayName="Truong"
+                photoURL={null}
+                createAt={121212}
+              />
+              <Message
+                text="test1"
+                displayName="Truong1"
+                photoURL={null}
+                createAt={121212}
+              />
+              <Message
+                text="test2"
+                displayName="Truong2"
+                photoURL={null}
+                createAt={121212}
+              />
+              <Message
+                text="test3"
+                displayName="Truong3"
+                photoURL={null}
+                createAt={121212}
+              />
+            </MessageListStyled>
+            <FormStyled>
+              <Form.Item>
+                <Input
+                  placeholder="Nhập tin nhắn ..."
+                  bordered={false}
+                  autoComplete="off"
+                />
+              </Form.Item>
+              <Button type="primary">Gửi</Button>
+            </FormStyled>
+          </ContentSyled>
+        </>
+      ) : (
+        <Alert
+          message="Hãy chọn phòng"
+          type="info"
+          showIcon
+          style={{ margin: 5 }}
+          closable
+        />
+      )}
     </WrapperStyled>
   );
 }

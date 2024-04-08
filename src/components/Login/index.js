@@ -2,7 +2,7 @@ import React from "react";
 import { Row, Col, Typography, Button } from "antd";
 import firebase, { auth, db } from "../../firebase/config";
 import { useNavigate } from "react-router-dom";
-import { addDocument } from "../../firebase/services";
+import { addDocument, generateKeywords } from "../../firebase/services";
 
 const { Title } = Typography;
 const fbProvider = new firebase.auth.FacebookAuthProvider();
@@ -18,6 +18,7 @@ export default function Login() {
         uid: user.uid,
         photoURL: user.photoURL,
         providerId: additionalUserInfo.providerId,
+        keywords: generateKeywords(user.displayName)
       });
     }
   };
