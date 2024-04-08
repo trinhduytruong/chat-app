@@ -6,10 +6,11 @@ import { addDocument, generateKeywords } from "../../firebase/services";
 
 const { Title } = Typography;
 const fbProvider = new firebase.auth.FacebookAuthProvider();
+const googleProvider = new firebase.auth.GoogleAuthProvider();
 
 export default function Login() {
-  const handleFbLogin = async () => {
-    const { additionalUserInfo, user } = await auth.signInWithPopup(fbProvider);
+  const handleLogin = async (provider) => {
+    const { additionalUserInfo, user } = await auth.signInWithPopup(provider);
 
     if (additionalUserInfo?.isNewUser) {
       addDocument("users", {
@@ -18,7 +19,7 @@ export default function Login() {
         uid: user.uid,
         photoURL: user.photoURL,
         providerId: additionalUserInfo.providerId,
-        keywords: generateKeywords(user.displayName)
+        keywords: generateKeywords(user.displayName.toLowerCase()),
       });
     }
   };
@@ -38,10 +39,16 @@ export default function Login() {
           <Title style={{ textAlign: "center" }} level={3}>
             Fun Chat
           </Title>
-          <Button style={{ width: "100%", marginBottom: 5 }}>
+          <Button
+            style={{ width: "100%", marginBottom: 5 }}
+            onClick={() => handleLogin(googleProvider)}
+          >
             Đăng nhập bằng Google
           </Button>
-          <Button style={{ width: "100%" }} onClick={handleFbLogin}>
+          <Button
+            style={{ width: "100%" }}
+            onClick={() => handleLogin(fbProvider)}
+          >
             Đăng nhập bằng Facebook
           </Button>
         </Col>
