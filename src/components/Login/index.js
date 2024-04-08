@@ -1,22 +1,32 @@
 import React from "react";
 import { Row, Col, Typography, Button } from "antd";
-import firebase, { auth } from "../../firebase/config";
-import { useNavigate  } from "react-router-dom";
+import firebase, { auth, db } from "../../firebase/config";
+import { useNavigate } from "react-router-dom";
+import { addDocument } from "../../firebase/services";
 
 const { Title } = Typography;
 const fbProvider = new firebase.auth.FacebookAuthProvider();
 
 export default function Login() {
+  const handleFbLogin = async () => {
+    const { additionalUserInfo, user } = await auth.signInWithPopup(fbProvider);
 
-  const handleFbLogin = () => {
-    auth.signInWithPopup(fbProvider);
+    if (additionalUserInfo?.isNewUser) {
+      addDocument("users", {
+        displayName: user.displayName,
+        email: user.email,
+        uid: user.uid,
+        photoURL: user.photoURL,
+        providerId: additionalUserInfo.providerId,
+      });
+    }
   };
 
   const navigate = useNavigate();
   auth.onAuthStateChanged((user) => {
     console.log({ user });
     if (user) {
-      navigate('/');
+      navigate("/");
     }
   });
 
